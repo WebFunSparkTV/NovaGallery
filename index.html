@@ -114,20 +114,21 @@
             document.getElementById('overlay').style.display = 'block';
         });
 
-        document.getElementById('fetch-category-button').addEventListener('click', function() {
+        document.getElementById('fetch-category-button').addEventListener('click', async function() {
             const category = document.getElementById('category-select').value;
             const numberOfImages = 10; // Number of images to fetch
 
-            // Fetch images
-            for (let i = 0; i < numberOfImages; i++) {
-                fetch(`https://api.waifu.pics/${category === 'nsfw' ? 'nsfw' : 'sfw'}/${category}`)
-                    .then(response => response.json())
-                    .then(data => {
-                        const img = document.createElement('img');
-                        img.src = data.url;
-                        document.getElementById('gallery').appendChild(img);
-                    })
-                    .catch(error => console.error('Error fetching image:', error));
+            try {
+                // Fetch images
+                for (let i = 0; i < numberOfImages; i++) {
+                    const response = await fetch(`https://api.waifu.pics/${category === 'nsfw' ? 'nsfw' : 'sfw'}/${category}`);
+                    const data = await response.json();
+                    const img = document.createElement('img');
+                    img.src = data.url;
+                    document.getElementById('gallery').appendChild(img);
+                }
+            } catch (error) {
+                console.error('Error fetching image:', error);
             }
 
             document.getElementById('popup').style.display = 'none';
